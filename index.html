@@ -385,7 +385,6 @@ function forgotPassword() {
   alert("Contate o administrador (Adriano) para redefinir sua senha.");
 }
 
-/* 🔵 Função adaptada com logo Power BI online */
 function mostrarLinks() {
   let area = document.getElementById("listaLinks");
   area.innerHTML = "";
@@ -394,7 +393,6 @@ function mostrarLinks() {
     const div = document.createElement("div");
     div.className = "item";
 
-    // Container do título + logo
     const containerTitulo = document.createElement("div");
     containerTitulo.style.display = "flex";
     containerTitulo.style.alignItems = "center";
@@ -413,7 +411,6 @@ function mostrarLinks() {
     containerTitulo.appendChild(titulo);
     div.appendChild(containerTitulo);
 
-    // Botões
     if (usuarioLogado === "adriano") {
       const abrirContainer = document.createElement("div");
       abrirContainer.style.flexGrow = "1";
@@ -504,13 +501,10 @@ function toggleFullscreen() {
 const canvasMatrix = document.getElementById('matrixCanvas');
 const ctx = canvasMatrix.getContext('2d');
 
-canvasMatrix.width = window.innerWidth;
-canvasMatrix.height = window.innerHeight;
-
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
 const fontSize = 18;
-const columns = Math.floor(canvasMatrix.width / fontSize);
-const drops = Array(columns).fill(0);
+let columns = Math.floor(window.innerWidth / fontSize);
+let drops = Array(columns).fill(0);
 
 function drawMatrix() {
   ctx.fillStyle = 'rgba(8,43,79,0.05)';
@@ -539,15 +533,23 @@ function drawMatrix() {
   requestAnimationFrame(drawMatrix);
 }
 
-drawMatrix();
-
-window.addEventListener('resize', ()=> {
+function resizeMatrix() {
   canvasMatrix.width = window.innerWidth;
   canvasMatrix.height = window.innerHeight;
-});
+
+  columns = Math.floor(canvasMatrix.width / fontSize);
+  drops = Array(columns).fill(0);
+}
+
+window.addEventListener('resize', resizeMatrix);
+
+// Inicializa o canvas
+resizeMatrix();
+drawMatrix();
 </script>
 
 </body>
 </html>
+
 
 
