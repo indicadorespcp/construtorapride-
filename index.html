@@ -342,7 +342,8 @@ const usuarios = [
   { usuario: "adriano", senha: "Adr#1980@!" },
   { usuario: "maria", senha: "abcd" },
   { usuario: "wesley", senha: "senha123" },
-  { usuario: "nicole", senha: "nicolesumida" }
+  { usuario: "nicole", senha: "nicolesumida" },
+  { usuario: "gustavo", senha: "diciocio1234" }
 ];
 
 let links = [
@@ -447,7 +448,7 @@ function mostrarLinks() {
     area.appendChild(div);
   });
 
-  const displayAdd = (usuarioLogado === "maria" || usuarioLogado === "wesley" || usuarioLogado === "nicole") ? "none" : "block";
+  const displayAdd = (usuarioLogado === "maria" || usuarioLogado === "wesley" || usuarioLogado === "nicole" || usuarioLogado === "gustavo") ? "none" : "block";
 
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
@@ -550,6 +551,3 @@ drawMatrix();
 
 </body>
 </html>
-
-
-
