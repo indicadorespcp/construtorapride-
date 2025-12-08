@@ -338,7 +338,19 @@
 <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <script>
+const usuarios = [
+  { usuario: "adriano", senha: "Adr#1980@!" },
+  { usuario: "maria", senha: "abcd" },
+  { usuario: "wesley", senha: "senha123" },
+  { usuario: "nicole", senha: "nicolesumida" },
+  { usuario: "gustavo", senha: "diciocio1234" }
+];
 
+let links = [
+  { titulo: "Gestão de Obras", link: "https://app.powerbi.com/view?r=eyJrIjoiZjU5OTQzOWEtZTQ4Zi00ZDJmLTk0ZWMtYTk1NDJmNTM0ODBjIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
+  { titulo: "Análise de Custos", link: "https://app.powerbi.com/view?r=eyJrIjoiZDQxMzNkY2YtYzcyMy00NTQxLWI2ODctOTQzYmFhMGRkNTRiIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
+  { titulo: "Controle de Estoque", link: "https://app.powerbi.com/view?r=eyJrIjoiZjExZmI2ZjMtZTNmZS00NWRjLTk3MWUtMDlhMTJmNjY3MjUxIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" }
+];
 
 let usuarioLogado = "";
 
@@ -539,7 +551,6 @@ drawMatrix();
 
 </body>
 </html>
-
 
 
 
