@@ -299,6 +299,7 @@
   #fullscreenBtn:hover {
     background: rgba(0,0,0,0.6);
   }
+
 </style>
 </head>
 <body>
@@ -337,7 +338,6 @@
 <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <script>
-// Usuários
 const usuarios = [
   { usuario: "adriano", senha: "Adr#1980@!" },
   { usuario: "maria", senha: "abcd" },
@@ -346,7 +346,6 @@ const usuarios = [
   { usuario: "gustavo", senha: "diciocio1234" }
 ];
 
-// Links iniciais
 let links = [
   { titulo: "Gestão de Obras", link: "https://app.powerbi.com/view?r=eyJrIjoiZjU5OTQzOWEtZTQ4Zi00ZDJmLTk0ZWMtYTk1NDJmNTM0ODBjIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
   { titulo: "Análise de Custos", link: "https://app.powerbi.com/view?r=eyJrIjoiZDQxMzNkY2YtYzcyMy00NTQxLWI2ODctOTQzYmFhMGRkNTRiIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
@@ -413,14 +412,21 @@ function mostrarLinks() {
     containerTitulo.appendChild(titulo);
     div.appendChild(containerTitulo);
 
-    const abrirBtn = document.createElement("a");
-    abrirBtn.href = "javascript:void(0)";
-    abrirBtn.textContent = "Abrir Relatório";
-    abrirBtn.className = "abrirBtn";
-    abrirBtn.onclick = () => abrirViewer(l.link);
-    div.appendChild(abrirBtn);
-
     if (usuarioLogado === "adriano") {
+      const abrirContainer = document.createElement("div");
+      abrirContainer.style.flexGrow = "1";
+      abrirContainer.style.display = "flex";
+      abrirContainer.style.justifyContent = "center";
+      abrirContainer.style.alignItems = "center";
+
+      const abrirBtn = document.createElement("a");
+      abrirBtn.href = "javascript:void(0)";
+      abrirBtn.textContent = "Abrir Relatório";
+      abrirBtn.className = "abrirBtn";
+      abrirBtn.onclick = () => abrirViewer(l.link);
+      abrirContainer.appendChild(abrirBtn);
+      div.appendChild(abrirContainer);
+
       const delBtn = document.createElement("button");
       delBtn.textContent = "Excluir";
       delBtn.className = "deleteBtn";
@@ -429,12 +435,20 @@ function mostrarLinks() {
         mostrarLinks();
       };
       div.appendChild(delBtn);
+    } else {
+      const abrirBtn = document.createElement("a");
+      abrirBtn.href = "javascript:void(0)";
+      abrirBtn.textContent = "Abrir Relatório";
+      abrirBtn.className = "abrirBtn";
+      abrirBtn.style.marginLeft = "auto";
+      abrirBtn.onclick = () => abrirViewer(l.link);
+      div.appendChild(abrirBtn);
     }
 
     area.appendChild(div);
   });
 
-  const displayAdd = (usuarioLogado === "adriano") ? "block" : "none";
+  const displayAdd = (usuarioLogado === "maria" || usuarioLogado === "wesley" || usuarioLogado === "nicole" || usuarioLogado === "gustavo") ? "none" : "block";
 
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
@@ -484,7 +498,7 @@ function toggleFullscreen() {
   }
 }
 
-// MATRIX
+/* MATRIX PREMIUM */
 const canvasMatrix = document.getElementById('matrixCanvas');
 const ctx = canvasMatrix.getContext('2d');
 
@@ -537,3 +551,6 @@ drawMatrix();
 
 </body>
 </html>
+
+
+
