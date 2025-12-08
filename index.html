@@ -338,14 +338,20 @@
 <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <script>
-const usuarios = [
-  { usuario: "adriano", senha: "Adr#1980@!" },
-  { usuario: "maria", senha: "abcd" },
-  { usuario: "wesley", senha: "senha123" },
-  { usuario: "nicole", senha: "nicolesumida" },
-  { usuario: "gustavo", senha: "diciocio1234" }
-];
 
+/* 🔵 USUÁRIOS AGORA CARREGAM DO usuarios.json */
+let usuarios = [];
+
+fetch("usuarios.json")
+  .then(response => response.json())
+  .then(data => {
+    usuarios = data;
+  })
+  .catch(error => {
+    console.error("Erro ao carregar usuarios.json:", error);
+  });
+
+/* 🔵 LINKS CONTINUAM INTERNOS POR ENQUANTO (podemos mover depois se quiser) */
 let links = [
   { titulo: "Gestão de Obras", link: "https://app.powerbi.com/view?r=eyJrIjoiZjU5OTQzOWEtZTQ4Zi00ZDJmLTk0ZWMtYTk1NDJmNTM0ODBjIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
   { titulo: "Análise de Custos", link: "https://app.powerbi.com/view?r=eyJrIjoiZDQxMzNkY2YtYzcyMy00NTQxLWI2ODctOTQzYmFhMGRkNTRiIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
@@ -547,10 +553,8 @@ window.addEventListener('resize', resizeMatrix);
 // Inicializa o canvas
 resizeMatrix();
 drawMatrix();
+
 </script>
 
 </body>
 </html>
-
-
-
