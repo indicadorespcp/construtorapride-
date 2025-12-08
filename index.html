@@ -338,20 +338,18 @@
 <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <script>
+// ============================
+// USUÁRIOS DIRETO NO JS
+// ============================
+const usuarios = [
+  { usuario: "adriano", senha: "Adr#1980@!" },
+  { usuario: "maria", senha: "abcd" },
+  { usuario: "wesley", senha: "senha123" },
+  { usuario: "nicole", senha: "nicolesumida" },
+  { usuario: "gustavo", senha: "diciocio1234" }
+];
 
-/* 🔵 USUÁRIOS AGORA CARREGAM DO usuarios.json */
-let usuarios = [];
-
-fetch("usuarios.json")
-  .then(response => response.json())
-  .then(data => {
-    usuarios = data;
-  })
-  .catch(error => {
-    console.error("Erro ao carregar usuarios.json:", error);
-  });
-
-/* 🔵 LINKS CONTINUAM INTERNOS POR ENQUANTO (podemos mover depois se quiser) */
+// LINKS INICIAIS
 let links = [
   { titulo: "Gestão de Obras", link: "https://app.powerbi.com/view?r=eyJrIjoiZjU5OTQzOWEtZTQ4Zi00ZDJmLTk0ZWMtYTk1NDJmNTM0ODBjIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
   { titulo: "Análise de Custos", link: "https://app.powerbi.com/view?r=eyJrIjoiZDQxMzNkY2YtYzcyMy00NTQxLWI2ODctOTQzYmFhMGRkNTRiIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
@@ -360,6 +358,9 @@ let links = [
 
 let usuarioLogado = "";
 
+// ============================
+// FUNÇÕES DE LOGIN
+// ============================
 function login() {
   const userInput = document.getElementById("user").value.trim();
   const passInput = document.getElementById("pass").value;
@@ -392,6 +393,9 @@ function forgotPassword() {
   alert("Contate o administrador (Adriano) para redefinir sua senha.");
 }
 
+// ============================
+// FUNÇÕES DE LINKS
+// ============================
 function mostrarLinks() {
   let area = document.getElementById("listaLinks");
   area.innerHTML = "";
@@ -450,11 +454,9 @@ function mostrarLinks() {
       abrirBtn.onclick = () => abrirViewer(l.link);
       div.appendChild(abrirBtn);
     }
-
-    area.appendChild(div);
   });
 
-  const displayAdd = (usuarioLogado === "maria" || usuarioLogado === "wesley" || usuarioLogado === "nicole" || usuarioLogado === "gustavo") ? "none" : "block";
+  const displayAdd = (usuarioLogado === "adriano") ? "block" : "none";
 
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
@@ -504,7 +506,9 @@ function toggleFullscreen() {
   }
 }
 
-/* MATRIX PREMIUM */
+// ============================
+// MATRIX PREMIUM
+// ============================
 const canvasMatrix = document.getElementById('matrixCanvas');
 const ctx = canvasMatrix.getContext('2d');
 
@@ -543,18 +547,15 @@ function drawMatrix() {
 function resizeMatrix() {
   canvasMatrix.width = window.innerWidth;
   canvasMatrix.height = window.innerHeight;
-
-  columns = Math.floor(canvasMatrix.width / fontSize);
+  columns = Math.floor(window.innerWidth / fontSize);
   drops = Array(columns).fill(0);
 }
 
 window.addEventListener('resize', resizeMatrix);
 
-// Inicializa o canvas
 resizeMatrix();
 drawMatrix();
 
 </script>
-
 </body>
 </html>
