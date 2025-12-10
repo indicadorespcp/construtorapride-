@@ -310,11 +310,13 @@
   <img src="https://construtorapride.saxxes.com.br/assets/logo/pride/logo200x200.svg" alt="Logo Pride" style="margin-left: -25px;"> 
   <h3 style="text-align: center; margin: -30px 0 50px 0; font-size: 20px; font-weight: 600; color: #082B4F;">Indicadores PCP</h3>
   <h2>Login</h2>
-  <input id="user" placeholder="Email">
+  <input id="user" placeholder="Usuário">
+
   <div class="password-container">
     <input id="pass" type="password" placeholder="Senha" style="padding: 6px 35px 6px 12px; font-size: 14px;"> 
     <span class="togglePassword" onclick="togglePassword()">👀</span>
   </div>
+
   <button onclick="login()">Entrar</button>
   <div id="forgot" onclick="forgotPassword()">Esqueci a senha</div>
 </div>
@@ -335,50 +337,44 @@
 
 <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <script>
-// --- CONFIGURAÇÃO FIREBASE ---
-const firebaseConfig = {
-  apiKey: "AIzaSyExemplo123456",
-  authDomain: "meu-projeto.firebaseapp.com",
-  projectId: "meu-projeto",
-  storageBucket: "meu-projeto.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
-};
+const usuarios = [
+  { usuario: "adriano", senha: "Adr#1980@!" },
+  { usuario: "maria", senha: "abcd" },
+  { usuario: "wesley", senha: "senha123" },
+  { usuario: "nicole", senha: "nicolesumida" },
+  { usuario: "gustavo", senha: "diciocio1234" }
+];
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+let links = [
+  { titulo: "Gestão de Obras", link: "https://app.powerbi.com/view?r=eyJrIjoiZjU5OTQzOWEtZTQ4Zi00ZDJmLTk0ZWMtYTk1NDJmNTM0ODBjIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
+  { titulo: "Análise de Custos", link: "https://app.powerbi.com/view?r=eyJrIjoiZDQxMzNkY2YtYzcyMy00NTQxLWI2ODctOTQzYmFhMGRkNTRiIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" },
+  { titulo: "Controle de Estoque", link: "https://app.powerbi.com/view?r=eyJrIjoiZjExZmI2ZjMtZTNmZS00NWRjLTk3MWUtMDlhMTJmNjY3MjUxIiwidCI6IjA3MWMyNjA2LWEwY2QtNGQ1YS1iNzA0LTg5MmNlMDBiMjhlNCJ9" }
+];
 
-// --- LOGIN ---
+let usuarioLogado = "";
+
 function login() {
-  const email = document.getElementById("user").value.trim();
-  const senha = document.getElementById("pass").value;
+  const userInput = document.getElementById("user").value.trim();
+  const passInput = document.getElementById("pass").value;
 
-  auth.signInWithEmailAndPassword(email, senha)
-    .then((userCredential) => {
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("linksBox").style.display = "block";
-      mostrarLinks();
-    })
-    .catch((error) => {
-      alert("Usuário ou senha incorretos.");
-      console.error(error);
-    });
+  const usuarioEncontrado = usuarios.find(u => u.usuario === userInput && u.senha === passInput);
+
+  if (usuarioEncontrado) {
+    usuarioLogado = usuarioEncontrado.usuario;
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("linksBox").style.display = "block";
+    mostrarLinks();
+  } else {
+    alert("Usuário ou senha incorretos.");
+  }
 }
 
 function logoutLinks() {
-  auth.signOut().then(() => {
-    document.getElementById("linksBox").style.display = "none";
-    document.getElementById("loginBox").style.display = "block";
-    document.getElementById("user").value = "";
-    document.getElementById("pass").value = "";
-  });
+  document.getElementById("linksBox").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("user").value = "";
+  document.getElementById("pass").value = "";
 }
 
 function togglePassword() {
@@ -387,68 +383,73 @@ function togglePassword() {
 }
 
 function forgotPassword() {
-  const email = document.getElementById("user").value.trim();
-  if (!email) return alert("Digite seu email para recuperar a senha.");
-  auth.sendPasswordResetEmail(email)
-    .then(() => alert("Email de redefinição enviado!"))
-    .catch(err => alert("Erro: " + err.message));
+  alert("Contate o administrador (Adriano) para redefinir sua senha.");
 }
 
-// --- LINKS ---
 function mostrarLinks() {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const area = document.getElementById("listaLinks");
+  let area = document.getElementById("listaLinks");
   area.innerHTML = "";
 
-  db.collection("links").orderBy("titulo").get()
-    .then(snapshot => {
-      snapshot.forEach(doc => {
-        const l = doc.data();
-        const div = document.createElement("div");
-        div.className = "item";
+  links.forEach((l, index) => {
+    const div = document.createElement("div");
+    div.className = "item";
 
-        const containerTitulo = document.createElement("div");
-        containerTitulo.style.display = "flex";
-        containerTitulo.style.alignItems = "center";
+    const containerTitulo = document.createElement("div");
+    containerTitulo.style.display = "flex";
+    containerTitulo.style.alignItems = "center";
 
-        const logo = document.createElement("img");
-        logo.src = "https://pragmaticworks.com/hs-fs/hubfs/Microsoft-Power-BI-Symbol.png?width=500&height=500&name=Microsoft-Power-BI-Symbol.png";
-        logo.alt = "Power BI";
-        logo.style.width = "25px";
-        logo.style.height = "25px";
-        logo.style.marginRight = "10px";
+    const logo = document.createElement("img");
+    logo.src = "https://pragmaticworks.com/hs-fs/hubfs/Microsoft-Power-BI-Symbol.png?width=500&height=500&name=Microsoft-Power-BI-Symbol.png";
+    logo.alt = "Power BI";
+    logo.style.width = "25px";
+    logo.style.height = "25px";
+    logo.style.marginRight = "10px";
 
-        const titulo = document.createElement("strong");
-        titulo.textContent = l.titulo;
+    const titulo = document.createElement("strong");
+    titulo.textContent = l.titulo;
 
-        containerTitulo.appendChild(logo);
-        containerTitulo.appendChild(titulo);
-        div.appendChild(containerTitulo);
+    containerTitulo.appendChild(logo);
+    containerTitulo.appendChild(titulo);
+    div.appendChild(containerTitulo);
 
-        const abrirBtn = document.createElement("a");
-        abrirBtn.href = "javascript:void(0)";
-        abrirBtn.textContent = "Abrir Relatório";
-        abrirBtn.className = "abrirBtn";
-        abrirBtn.onclick = () => abrirViewer(l.link);
-        div.appendChild(abrirBtn);
+    if (usuarioLogado === "adriano") {
+      const abrirContainer = document.createElement("div");
+      abrirContainer.style.flexGrow = "1";
+      abrirContainer.style.display = "flex";
+      abrirContainer.style.justifyContent = "center";
+      abrirContainer.style.alignItems = "center";
 
-        if (user.email === "adriano@teste.com") {
-          const delBtn = document.createElement("button");
-          delBtn.textContent = "Excluir";
-          delBtn.className = "deleteBtn";
-          delBtn.onclick = () => {
-            db.collection("links").doc(doc.id).delete().then(mostrarLinks);
-          };
-          div.appendChild(delBtn);
-        }
+      const abrirBtn = document.createElement("a");
+      abrirBtn.href = "javascript:void(0)";
+      abrirBtn.textContent = "Abrir Relatório";
+      abrirBtn.className = "abrirBtn";
+      abrirBtn.onclick = () => abrirViewer(l.link);
+      abrirContainer.appendChild(abrirBtn);
+      div.appendChild(abrirContainer);
 
-        area.appendChild(div);
-      });
-    });
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Excluir";
+      delBtn.className = "deleteBtn";
+      delBtn.onclick = () => {
+        links.splice(index, 1);
+        mostrarLinks();
+      };
+      div.appendChild(delBtn);
+    } else {
+      const abrirBtn = document.createElement("a");
+      abrirBtn.href = "javascript:void(0)";
+      abrirBtn.textContent = "Abrir Relatório";
+      abrirBtn.className = "abrirBtn";
+      abrirBtn.style.marginLeft = "auto";
+      abrirBtn.onclick = () => abrirViewer(l.link);
+      div.appendChild(abrirBtn);
+    }
 
-  const displayAdd = user.email === "adriano@teste.com" ? "block" : "none";
+    area.appendChild(div);
+  });
+
+  const displayAdd = (usuarioLogado === "maria" || usuarioLogado === "wesley" || usuarioLogado === "nicole" || usuarioLogado === "gustavo") ? "none" : "block";
+
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
   document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
@@ -458,19 +459,23 @@ function addLink() {
   const titulo = document.getElementById("newTitulo").value.trim();
   const link = document.getElementById("newLink").value.trim();
 
-  if (!titulo || !link) return alert("Preencha título e link!");
+  if (!titulo || !link) {
+    alert("Preencha título e link!");
+    return;
+  }
 
-  db.collection("links").add({ titulo, link })
-    .then(() => {
-      document.getElementById("newTitulo").value = "";
-      document.getElementById("newLink").value = "";
-      mostrarLinks();
-    });
+  links.push({ titulo, link });
+
+  document.getElementById("newTitulo").value = "";
+  document.getElementById("newLink").value = "";
+
+  mostrarLinks();
 }
 
 function abrirViewer(url) {
   const v = document.getElementById("viewerFull");
   const f = document.getElementById("viewerFrame");
+
   f.src = url;
   v.style.display = "block";
 }
@@ -478,6 +483,7 @@ function abrirViewer(url) {
 function fecharViewer() {
   const v = document.getElementById("viewerFull");
   const f = document.getElementById("viewerFrame");
+
   f.src = "";
   v.style.display = "none";
 }
@@ -486,7 +492,9 @@ function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
   } else {
-    if (document.exitFullscreen) document.exitFullscreen();
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
   }
 }
 
@@ -505,14 +513,21 @@ function drawMatrix() {
 
   for (let i = 0; i < drops.length; i++) {
     const text = letters[Math.floor(Math.random() * letters.length)];
+
     const gradient = ctx.createLinearGradient(0, 0, 0, canvasMatrix.height);
     gradient.addColorStop(0, '#00f5ff');
     gradient.addColorStop(0.5, '#00a1ff');
     gradient.addColorStop(1, '#0078D4');
+
     ctx.fillStyle = gradient;
     ctx.font = fontSize + 'px monospace';
+
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > canvasMatrix.height && Math.random() > 0.95) drops[i] = 0;
+
+    if (drops[i] * fontSize > canvasMatrix.height && Math.random() > 0.95) {
+      drops[i] = 0;
+    }
+
     drops[i]++;
   }
 
@@ -522,16 +537,20 @@ function drawMatrix() {
 function resizeMatrix() {
   canvasMatrix.width = window.innerWidth;
   canvasMatrix.height = window.innerHeight;
+
   columns = Math.floor(canvasMatrix.width / fontSize);
   drops = Array(columns).fill(0);
 }
 
 window.addEventListener('resize', resizeMatrix);
+
+// Inicializa o canvas
 resizeMatrix();
 drawMatrix();
-
-auth.onAuthStateChanged(user => { if (user) mostrarLinks(); });
 </script>
 
 </body>
 </html>
+
+
+
