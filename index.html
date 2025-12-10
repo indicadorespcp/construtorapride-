@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />  
 <title>PowerBI Vault</title>
+
+<!-- BASE URL PARA GITHUB PAGES -->
+<base href="/construtorapride-/">
+
 <style>
   html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
   #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #082B4F; z-index: -1; }
@@ -86,7 +90,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebas
 import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-// --- CONFIGURAÇÃO FIREBASE ---
 const firebaseConfig = {
   apiKey: "AIzaSyDyTenanyTtr4bfLTxbvytYuVWSbibSXtQ",
   authDomain: "indicadores-pcp.firebaseapp.com",
@@ -101,7 +104,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- LOGIN ---
 async function login() {
   const email = document.getElementById("user").value.trim();
   const senha = document.getElementById("pass").value;
@@ -110,10 +112,7 @@ async function login() {
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("linksBox").style.display = "block";
     mostrarLinks();
-  } catch(err) {
-    alert("Usuário ou senha incorretos.");
-    console.error(err);
-  }
+  } catch(err) { alert("Usuário ou senha incorretos."); console.error(err); }
 }
 
 async function logoutLinks() {
@@ -132,13 +131,10 @@ function togglePassword() {
 async function forgotPassword() {
   const email = document.getElementById("user").value.trim();
   if (!email) return alert("Digite seu email para recuperar a senha.");
-  try {
-    await sendPasswordResetEmail(auth, email);
-    alert("Email de redefinição enviado!");
-  } catch(err) { alert("Erro: " + err.message); }
+  try { await sendPasswordResetEmail(auth, email); alert("Email de redefinição enviado!"); }
+  catch(err) { alert("Erro: " + err.message); }
 }
 
-// --- LINKS ---
 async function mostrarLinks() {
   const user = auth.currentUser;
   if (!user) return;
@@ -224,7 +220,6 @@ function toggleFullscreen() {
   else if (document.exitFullscreen) document.exitFullscreen();
 }
 
-/* MATRIX PREMIUM */
 const canvasMatrix = document.getElementById('matrixCanvas');
 const ctx = canvasMatrix.getContext('2d');
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
@@ -261,10 +256,8 @@ window.addEventListener('resize', resizeMatrix);
 resizeMatrix();
 drawMatrix();
 
-// Atualiza visualização se já estiver logado
 onAuthStateChanged(auth, user => { if (user) mostrarLinks(); });
 
-// --- EXPÔS FUNÇÕES PARA HTML ---
 window.login = login;
 window.logoutLinks = logoutLinks;
 window.togglePassword = togglePassword;
