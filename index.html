@@ -193,18 +193,6 @@ async function mostrarLinks() {
     abrirBtn.onclick = () => abrirViewer(l.link);
     div.appendChild(abrirBtn);
 
-    // 🔹 Botão de excluir só para Adriano
-    if (user.email === "adriano.freitas@construtorapride.com.br") {
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "Excluir";
-      delBtn.className = "deleteBtn";
-      delBtn.onclick = async () => {
-        await deleteDoc(doc(db, "links", docSnap.id));
-        mostrarLinks();
-      };
-      div.appendChild(delBtn);
-    }
-
     area.appendChild(div);
   });
 
@@ -214,6 +202,7 @@ async function mostrarLinks() {
   document.querySelector("#newLink").style.display = displayAdd;
   document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
 }
+
 
 async function addLink() {
   const titulo = document.getElementById("newTitulo").value.trim();
