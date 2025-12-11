@@ -195,13 +195,8 @@ async function mostrarLinks() {
 
     area.appendChild(div);
   });
-
-  // 🔹 Mostrar campos de adicionar link só para Adriano
-  const displayAdd = user.email === "adriano.freitas@construtorapride.com.br" ? "block" : "none";
-  document.querySelector("#newTitulo").style.display = displayAdd;
-  document.querySelector("#newLink").style.display = displayAdd;
-  document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
 }
+
 
 
 async function addLink() {
