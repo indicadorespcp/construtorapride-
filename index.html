@@ -160,8 +160,10 @@ async function mostrarLinks() {
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
 
-    // 🔥 FILTRO POR USUÁRIO
-    if (!l.allowedUsers || !l.allowedUsers.includes(user.email)) return;
+    // 🔹 FILTRO POR USUÁRIO
+    if (user.email === "adriano.freitas@construtorapride.com.br" && l.titulo !== "Gestão de Obras") {
+      return; // Adriano só vê "Gestão de Obras"
+    }
 
     const div = document.createElement("div");
     div.className = "item";
@@ -191,7 +193,8 @@ async function mostrarLinks() {
     abrirBtn.onclick = () => abrirViewer(l.link);
     div.appendChild(abrirBtn);
 
-    if (user.email === "adriano@teste.com") {
+    // Botão de exclusão só para Adriano se precisar
+    if (user.email === "adriano.freitas@construtorapride.com.br") {
       const delBtn = document.createElement("button");
       delBtn.textContent = "Excluir";
       delBtn.className = "deleteBtn";
@@ -205,11 +208,13 @@ async function mostrarLinks() {
     area.appendChild(div);
   });
 
-  const displayAdd = user.email === "adriano@teste.com" ? "block" : "none";
+  // Mostrar inputs de adicionar link apenas para Adriano
+  const displayAdd = user.email === "adriano.freitas@construtorapride.com.br" ? "block" : "none";
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
   document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
 }
+
 
 async function addLink() {
   const titulo = document.getElementById("newTitulo").value.trim();
