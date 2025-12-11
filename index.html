@@ -159,6 +159,12 @@ async function mostrarLinks() {
 
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
+
+    // 🔹 FILTRO POR USUÁRIO
+    if (user.email === "adriano.freitas@construtorapride.com.br" && l.titulo !== "Gestão de Obras") {
+      return; // pula links que não são "Gestão de Obras"
+    }
+
     const div = document.createElement("div");
     div.className = "item";
 
@@ -187,7 +193,8 @@ async function mostrarLinks() {
     abrirBtn.onclick = () => abrirViewer(l.link);
     div.appendChild(abrirBtn);
 
-    if (user.email === "adriano@teste.com") {
+    // 🔹 Botão de excluir só para Adriano
+    if (user.email === "adriano.freitas@construtorapride.com.br") {
       const delBtn = document.createElement("button");
       delBtn.textContent = "Excluir";
       delBtn.className = "deleteBtn";
@@ -201,7 +208,8 @@ async function mostrarLinks() {
     area.appendChild(div);
   });
 
-  const displayAdd = user.email === "adriano@teste.com" ? "block" : "none";
+  // 🔹 Mostrar campos de adicionar link só para Adriano
+  const displayAdd = user.email === "adriano.freitas@construtorapride.com.br" ? "block" : "none";
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
   document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
