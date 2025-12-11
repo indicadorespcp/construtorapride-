@@ -152,7 +152,12 @@ async function mostrarLinks() {
   if (!user) return;
 
   const area = document.getElementById("listaLinks");
-  area.innerHTML = "";
+  area.innerHTML = ""; // Limpa antes de adicionar links
+
+  // 🔹 Sempre esconde campos de adicionar link
+  document.querySelector("#newTitulo").style.display = "none";
+  document.querySelector("#newLink").style.display = "none";
+  document.querySelector("#linksBox button[onclick='addLink()']").style.display = "none";
 
   const q = query(collection(db, "links"), orderBy("titulo"));
   const snapshot = await getDocs(q);
@@ -160,9 +165,9 @@ async function mostrarLinks() {
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
 
-    // 🔹 FILTRO POR USUÁRIO
+    // 🔹 Filtro: Adriano só vê "Gestão de Obras"
     if (user.email === "adriano.freitas@construtorapride.com.br" && l.titulo !== "Gestão de Obras") {
-      return; // pula links que não são "Gestão de Obras"
+      return; // pula esse link
     }
 
     const div = document.createElement("div");
@@ -196,6 +201,7 @@ async function mostrarLinks() {
     area.appendChild(div);
   });
 }
+
 
 
 
