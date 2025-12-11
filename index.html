@@ -113,8 +113,9 @@ async function login() {
 
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("linksBox").style.display = "block";
+
+    // 🔥 CORRIGIDO: Removido mostrarLinks() aqui.
     
-    mostrarLinks(); // chama a função após login
   } catch(err) {
     alert("Usuário ou senha incorretos.");
     console.error(err);
@@ -146,7 +147,6 @@ async function forgotPassword() {
   }
 }
 
-// Função mostrarLinks atualizada com filtro por allowedUsers
 async function mostrarLinks() {
   const user = auth.currentUser;
   if (!user) return;
@@ -159,12 +159,6 @@ async function mostrarLinks() {
 
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
-
-    // 🔹 FILTRO POR USUÁRIO
-    if (user.email === "adriano.freitas@construtorapride.com.br" && l.titulo !== "Gestão de Obras") {
-      return; // Adriano só vê "Gestão de Obras"
-    }
-
     const div = document.createElement("div");
     div.className = "item";
 
@@ -193,8 +187,7 @@ async function mostrarLinks() {
     abrirBtn.onclick = () => abrirViewer(l.link);
     div.appendChild(abrirBtn);
 
-    // Botão de exclusão só para Adriano se precisar
-    if (user.email === "adriano.freitas@construtorapride.com.br") {
+    if (user.email === "adriano@teste.com") {
       const delBtn = document.createElement("button");
       delBtn.textContent = "Excluir";
       delBtn.className = "deleteBtn";
@@ -208,13 +201,11 @@ async function mostrarLinks() {
     area.appendChild(div);
   });
 
-  // Mostrar inputs de adicionar link apenas para Adriano
-  const displayAdd = user.email === "adriano.freitas@construtorapride.com.br" ? "block" : "none";
+  const displayAdd = user.email === "adriano@teste.com" ? "block" : "none";
   document.querySelector("#newTitulo").style.display = displayAdd;
   document.querySelector("#newLink").style.display = displayAdd;
   document.querySelector("#linksBox button[onclick='addLink()']").style.display = displayAdd;
 }
-
 
 async function addLink() {
   const titulo = document.getElementById("newTitulo").value.trim();
@@ -222,12 +213,7 @@ async function addLink() {
 
   if (!titulo || !link) return alert("Preencha título e link!");
 
-  // 🔥 Adicionando allowedUsers automaticamente para admin
-  await addDoc(collection(db, "links"), { 
-    titulo, 
-    link, 
-    allowedUsers: ["adriano@teste.com"] // só admin por padrão
-  });
+  await addDoc(collection(db, "links"), { titulo, link });
 
   document.getElementById("newTitulo").value = "";
   document.getElementById("newLink").value = "";
@@ -259,7 +245,6 @@ function toggleFullscreen() {
   }
 }
 
-// MATRIX BACKGROUND
 const canvasMatrix = document.getElementById('matrixCanvas');
 const ctx = canvasMatrix.getContext('2d');
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
@@ -304,7 +289,6 @@ window.addEventListener('resize', resizeMatrix);
 resizeMatrix();
 drawMatrix();
 
-// Auth state
 onAuthStateChanged(auth, user => {
   if (user) mostrarLinks();
 });
