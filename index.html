@@ -107,12 +107,19 @@ const db = getFirestore(app);
 async function login() {
   const email = document.getElementById("user").value.trim();
   const senha = document.getElementById("pass").value;
+
   try {
     await signInWithEmailAndPassword(auth, email, senha);
+
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("linksBox").style.display = "block";
-    mostrarLinks();
-  } catch(err) { alert("Usuário ou senha incorretos."); console.error(err); }
+
+    // 🔥 CORRIGIDO: Removido mostrarLinks() aqui.
+    
+  } catch(err) {
+    alert("Usuário ou senha incorretos.");
+    console.error(err);
+  }
 }
 
 async function logoutLinks() {
@@ -131,8 +138,13 @@ function togglePassword() {
 async function forgotPassword() {
   const email = document.getElementById("user").value.trim();
   if (!email) return alert("Digite seu email para recuperar a senha.");
-  try { await sendPasswordResetEmail(auth, email); alert("Email de redefinição enviado!"); }
-  catch(err) { alert("Erro: " + err.message); }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Email de redefinição enviado!");
+  } catch(err) {
+    alert("Erro: " + err.message);
+  }
 }
 
 async function mostrarLinks() {
@@ -144,6 +156,7 @@ async function mostrarLinks() {
 
   const q = query(collection(db, "links"), orderBy("titulo"));
   const snapshot = await getDocs(q);
+
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
     const div = document.createElement("div");
@@ -178,7 +191,10 @@ async function mostrarLinks() {
       const delBtn = document.createElement("button");
       delBtn.textContent = "Excluir";
       delBtn.className = "deleteBtn";
-      delBtn.onclick = async () => { await deleteDoc(doc(db, "links", docSnap.id)); mostrarLinks(); };
+      delBtn.onclick = async () => {
+        await deleteDoc(doc(db, "links", docSnap.id));
+        mostrarLinks();
+      };
       div.appendChild(delBtn);
     }
 
@@ -194,16 +210,21 @@ async function mostrarLinks() {
 async function addLink() {
   const titulo = document.getElementById("newTitulo").value.trim();
   const link = document.getElementById("newLink").value.trim();
+
   if (!titulo || !link) return alert("Preencha título e link!");
+
   await addDoc(collection(db, "links"), { titulo, link });
+
   document.getElementById("newTitulo").value = "";
   document.getElementById("newLink").value = "";
+
   mostrarLinks();
 }
 
 function abrirViewer(url) {
   const v = document.getElementById("viewerFull");
   const f = document.getElementById("viewerFrame");
+
   f.src = url;
   v.style.display = "block";
 }
@@ -211,13 +232,17 @@ function abrirViewer(url) {
 function fecharViewer() {
   const v = document.getElementById("viewerFull");
   const f = document.getElementById("viewerFrame");
+
   f.src = "";
   v.style.display = "none";
 }
 
 function toggleFullscreen() {
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-  else if (document.exitFullscreen) document.exitFullscreen();
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+  }
 }
 
 const canvasMatrix = document.getElementById('matrixCanvas');
@@ -230,24 +255,32 @@ let drops = Array(columns).fill(0);
 function drawMatrix() {
   ctx.fillStyle = 'rgba(8,43,79,0.05)';
   ctx.fillRect(0, 0, canvasMatrix.width, canvasMatrix.height);
+
   for (let i = 0; i < drops.length; i++) {
     const text = letters[Math.floor(Math.random() * letters.length)];
+
     const gradient = ctx.createLinearGradient(0, 0, 0, canvasMatrix.height);
     gradient.addColorStop(0, '#00f5ff');
     gradient.addColorStop(0.5, '#00a1ff');
     gradient.addColorStop(1, '#0078D4');
+
     ctx.fillStyle = gradient;
     ctx.font = fontSize + 'px monospace';
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > canvasMatrix.height && Math.random() > 0.95) drops[i] = 0;
+
+    if (drops[i] * fontSize > canvasMatrix.height && Math.random() > 0.95)
+      drops[i] = 0;
+
     drops[i]++;
   }
+
   requestAnimationFrame(drawMatrix);
 }
 
 function resizeMatrix() {
   canvasMatrix.width = window.innerWidth;
   canvasMatrix.height = window.innerHeight;
+
   columns = Math.floor(canvasMatrix.width / fontSize);
   drops = Array(columns).fill(0);
 }
@@ -256,7 +289,9 @@ window.addEventListener('resize', resizeMatrix);
 resizeMatrix();
 drawMatrix();
 
-onAuthStateChanged(auth, user => { if (user) mostrarLinks(); });
+onAuthStateChanged(auth, user => {
+  if (user) mostrarLinks();
+});
 
 window.login = login;
 window.logoutLinks = logoutLinks;
