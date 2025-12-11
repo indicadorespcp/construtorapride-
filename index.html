@@ -88,7 +88,9 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, deleteDoc, where 
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDyTenanyTtr4bfLTxbvytYuVWSbibSXtQ",
@@ -152,12 +154,13 @@ async function mostrarLinks() {
   if (!user) return;
 
   const area = document.getElementById("listaLinks");
-  area.innerHTML = ""; // Limpa antes de adicionar links
+  area.innerHTML = "";
 
-  // 🔹 Sempre esconde campos de adicionar link
-  document.querySelector("#newTitulo").style.display = "none";
-  document.querySelector("#newLink").style.display = "none";
-  document.querySelector("#linksBox button[onclick='addLink()']").style.display = "none";
+  // 🔹 Lista de usuários especiais e os links que podem ver
+  const specialUsers = {
+    "adriano.freitas@construtorapride.com.br": ["Gestão de Obras"],
+    "charles.farias@construtorapride.com.br": ["Controle de Estoque"]
+  };
 
   const q = query(collection(db, "links"), orderBy("titulo"));
   const snapshot = await getDocs(q);
@@ -165,9 +168,9 @@ async function mostrarLinks() {
   snapshot.forEach(docSnap => {
     const l = docSnap.data();
 
-    // 🔹 Filtro: Adriano só vê "Gestão de Obras"
-    if (user.email === "adriano.freitas@construtorapride.com.br" && l.titulo !== "Gestão de Obras") {
-      return; // pula esse link
+    // 🔹 Filtra links se for usuário especial
+    if (specialUsers[user.email] && !specialUsers[user.email].includes(l.titulo)) {
+      return; // pula links que o usuário especial não deve ver
     }
 
     const div = document.createElement("div");
@@ -200,7 +203,15 @@ async function mostrarLinks() {
 
     area.appendChild(div);
   });
+
+  // 🔹 Oculta campos de adicionar link para todos (por enquanto)
+  document.querySelector("#newTitulo").style.display = "none";
+  document.querySelector("#newLink").style.display = "none";
+  document.querySelector("#linksBox button[onclick='addLink()']").style.display = "none";
 }
+
+
+
 
 
 
